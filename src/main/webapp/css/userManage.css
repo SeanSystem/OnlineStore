@@ -1,0 +1,91 @@
+ [v-cloak] {
+      display: none !important;
+    }
+    .content{
+      width: 1170px;
+      margin: 0px auto;
+    }
+    .table-wrap{
+      padding: 0 10px 0 10px;
+      border: solid 1px #CDCDCD;
+      margin-bottom: 10px;
+
+    }
+    .mode_two{
+      width: 100%;
+      padding: 0 10px 0 10px;
+      margin-top:1px;
+      table-layout:fixed;
+    }
+    .mode_two tr{
+      height: 48px;
+    }
+    .mode_two tr td{
+      text-align: center;
+    }
+    .mode_two colgroup .add-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .mode_two colgroup .del-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .mode_two colgroup .cx-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .mode_two colgroup .up-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .table colgroup .num-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .table colgroup .nam-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .table colgroup .tim-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .table colgroup .ct-col{
+      width: 25%;
+      align:center;
+      valign:middle;
+    }
+    .th{
+      position: relative;
+    }
+    .th::after{
+      content: "";
+      background-color: #f2f2f2;
+      position: absolute;
+      width: 1170px;
+      height: 49px;
+      z-index: -1;
+      top: 0;
+      left: -10px;
+      border-bottom:solid 1px #c2d5e3;
+    }
+
+    .modal.fade.in{
+      top: 10%;
+      overflow: hidden;
+    }
+    @media (min-width: 992px){
+      .modal-lg {
+        width: 600px!important;
+        margin-left:385px!important;
+      }
+
+    }

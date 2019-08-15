@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyb.dao.ProductsMapper" >
+  <resultMap id="BaseResultMap" type="com.hyb.pojo.Products" >
+    <id column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="pname" property="pname" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="sellpoint" property="sellpoint" jdbcType="VARCHAR" />
+    <result column="market_price" property="marketPrice" jdbcType="DOUBLE" />
+    <result column="shop_price" property="shopPrice" jdbcType="DOUBLE" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="pdate" property="pdate" jdbcType="DATE" />
+    <result column="is_hot" property="isHot" jdbcType="INTEGER" />
+    <result column="pflag" property="pflag" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyb.pojo.Products" extends="BaseResultMap" >
+    <result column="p_desc" property="pDesc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    pid, pname, count, sellpoint, market_price, shop_price, image, pdate, is_hot, pflag, 
+    cid
+  </sql>
+  <sql id="Blob_Column_List" >
+    p_desc
+  </sql>
+  <select id="getNewestProducts" resultMap="ResultMapWithBLOBs" parameterType="int">
+  		SELECT pid,pname,image,shop_price 
+  		FROM products
+  	    where pflag=1 and is_hot=0
+  		ORDER BY pdate desc LIMIT #{num};
+  </select>
+  <select id="getHotProducts" resultMap="ResultMapWithBLOBs" parameterType="int">
+  		SELECT pid,pname,image,shop_price 
+  		FROM products
+  	    where pflag=1 and is_hot=1
+  		ORDER BY pdate desc LIMIT #{num};
+  </select>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyb.pojo.ProductsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from products
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyb.pojo.ProductsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from products
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from products
+    where pid = #{pid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from products
+    where pid = #{pid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyb.pojo.ProductsExample" >
+    delete from products
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyb.pojo.Products" >
+    insert into products (pid, pname, count, 
+      sellpoint, market_price, shop_price, 
+      image, pdate, is_hot, pflag, 
+      cid, p_desc)
+    values (#{pid,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER}, 
+      #{sellpoint,jdbcType=VARCHAR}, #{marketPrice,jdbcType=DOUBLE}, #{shopPrice,jdbcType=DOUBLE}, 
+      #{image,jdbcType=VARCHAR}, #{pdate,jdbcType=DATE}, #{isHot,jdbcType=INTEGER}, #{pflag,jdbcType=INTEGER}, 
+      #{cid,jdbcType=VARCHAR}, #{pDesc,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyb.pojo.Products" >
+    insert into products
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="pname != null" >
+        pname,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="sellpoint != null" >
+        sellpoint,
+      </if>
+      <if test="marketPrice != null" >
+        market_price,
+      </if>
+      <if test="shopPrice != null" >
+        shop_price,
+      </if>
+      <if test="image != null" >
+        image,
+      </if>
+      <if test="pdate != null" >
+        pdate,
+      </if>
+      <if test="isHot != null" >
+        is_hot,
+      </if>
+      <if test="pflag != null" >
+        pflag,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="pDesc != null" >
+        p_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pid != null" >
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="pname != null" >
+        #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="sellpoint != null" >
+        #{sellpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        #{marketPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="shopPrice != null" >
+        #{shopPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="image != null" >
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="pdate != null" >
+        #{pdate,jdbcType=DATE},
+      </if>
+      <if test="isHot != null" >
+        #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="pflag != null" >
+        #{pflag,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="pDesc != null" >
+        #{pDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyb.pojo.ProductsExample" resultType="java.lang.Integer" >
+    select count(*) from products
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update products
+    <set >
+      <if test="record.pid != null" >
+        pid = #{record.pid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pname != null" >
+        pname = #{record.pname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.count != null" >
+        count = #{record.count,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellpoint != null" >
+        sellpoint = #{record.sellpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="record.marketPrice != null" >
+        market_price = #{record.marketPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.shopPrice != null" >
+        shop_price = #{record.shopPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.image != null" >
+        image = #{record.image,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pdate != null" >
+        pdate = #{record.pdate,jdbcType=DATE},
+      </if>
+      <if test="record.isHot != null" >
+        is_hot = #{record.isHot,jdbcType=INTEGER},
+      </if>
+      <if test="record.pflag != null" >
+        pflag = #{record.pflag,jdbcType=INTEGER},
+      </if>
+      <if test="record.cid != null" >
+        cid = #{record.cid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pDesc != null" >
+        p_desc = #{record.pDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update products
+    set pid = #{record.pid,jdbcType=VARCHAR},
+      pname = #{record.pname,jdbcType=VARCHAR},
+      count = #{record.count,jdbcType=INTEGER},
+      sellpoint = #{record.sellpoint,jdbcType=VARCHAR},
+      market_price = #{record.marketPrice,jdbcType=DOUBLE},
+      shop_price = #{record.shopPrice,jdbcType=DOUBLE},
+      image = #{record.image,jdbcType=VARCHAR},
+      pdate = #{record.pdate,jdbcType=DATE},
+      is_hot = #{record.isHot,jdbcType=INTEGER},
+      pflag = #{record.pflag,jdbcType=INTEGER},
+      cid = #{record.cid,jdbcType=VARCHAR},
+      p_desc = #{record.pDesc,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update products
+    set pid = #{record.pid,jdbcType=VARCHAR},
+      pname = #{record.pname,jdbcType=VARCHAR},
+      count = #{record.count,jdbcType=INTEGER},
+      sellpoint = #{record.sellpoint,jdbcType=VARCHAR},
+      market_price = #{record.marketPrice,jdbcType=DOUBLE},
+      shop_price = #{record.shopPrice,jdbcType=DOUBLE},
+      image = #{record.image,jdbcType=VARCHAR},
+      pdate = #{record.pdate,jdbcType=DATE},
+      is_hot = #{record.isHot,jdbcType=INTEGER},
+      pflag = #{record.pflag,jdbcType=INTEGER},
+      cid = #{record.cid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyb.pojo.Products" >
+    update products
+    <set >
+      <if test="pname != null" >
+        pname = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="sellpoint != null" >
+        sellpoint = #{sellpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="marketPrice != null" >
+        market_price = #{marketPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="shopPrice != null" >
+        shop_price = #{shopPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="image != null" >
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="pdate != null" >
+        pdate = #{pdate,jdbcType=DATE},
+      </if>
+      <if test="isHot != null" >
+        is_hot = #{isHot,jdbcType=INTEGER},
+      </if>
+      <if test="pflag != null" >
+        pflag = #{pflag,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=VARCHAR},
+      </if>
+      <if test="pDesc != null" >
+        p_desc = #{pDesc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where pid = #{pid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyb.pojo.Products" >
+    update products
+    set pname = #{pname,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      sellpoint = #{sellpoint,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DOUBLE},
+      shop_price = #{shopPrice,jdbcType=DOUBLE},
+      image = #{image,jdbcType=VARCHAR},
+      pdate = #{pdate,jdbcType=DATE},
+      is_hot = #{isHot,jdbcType=INTEGER},
+      pflag = #{pflag,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=VARCHAR},
+      p_desc = #{pDesc,jdbcType=LONGVARCHAR}
+    where pid = #{pid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyb.pojo.Products" >
+    update products
+    set pname = #{pname,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      sellpoint = #{sellpoint,jdbcType=VARCHAR},
+      market_price = #{marketPrice,jdbcType=DOUBLE},
+      shop_price = #{shopPrice,jdbcType=DOUBLE},
+      image = #{image,jdbcType=VARCHAR},
+      pdate = #{pdate,jdbcType=DATE},
+      is_hot = #{isHot,jdbcType=INTEGER},
+      pflag = #{pflag,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=VARCHAR}
+    where pid = #{pid,jdbcType=VARCHAR}
+  </update>
+</mapper>
